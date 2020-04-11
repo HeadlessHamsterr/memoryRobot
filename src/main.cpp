@@ -35,8 +35,8 @@ int pairY2;
 
 void setup() {
   Serial.begin(115200);
-  SPI.begin();
-  rfid.PCD_Init();
+  //SPI.begin();
+  //rfid.PCD_Init();
 
   pinMode(X_DIR_PIN, OUTPUT);
   pinMode(X_ENABLE_PIN, OUTPUT);
@@ -55,12 +55,17 @@ void setup() {
   digitalWrite(Y_ENABLE_PIN, LOW);
   digitalWrite(Z_ENABLE_PIN, LOW);
 
+
+  move(30, 30, currentZ);
+
+/*
   home();
   delay(2000);
-  move(X_SIZE/2, Y_SIZE/2, Z_HEIGHT); //Move to the center
+  move(X_SIZE/2, Y_SIZE/2, Z_HEIGHT); //Move to the center*/
 }
-
+ 
 void loop() {
+  /*
   if(!firstRun){  //If the machine hasn't read a card, no cards will be the same, so skip the checking
     if(checkForPairs){  //Check if there is a pair
       getCard(pairX1, pairY1, pairX2, pairY2);  //Collect the matching cards
@@ -70,7 +75,7 @@ void loop() {
   }else{
     chooseCard();
     firstRun = false;
-  }
+  }*/
 }
 
 void move(int x, int y, int z){
@@ -444,4 +449,38 @@ bool checkForPairs(){
   }
 }
 
-const char* lookUpCardType(const char* cardUID){}
+const char* lookUpCardType(const char* cardUID){
+  if(cardUID == cardUID1){
+    return cardType1;
+  }else if(cardUID == cardUID2){
+    return cardType1;
+  }else if(cardUID == cardUID3){
+    return cardType2;
+  }else if(cardUID == cardUID4){
+    return cardType2;
+  }else if(cardUID == cardUID5){
+    return cardType3;
+  }else if(cardUID == cardUID6){
+    return cardType3;
+  }else if(cardUID == cardUID7){
+    return cardType4;
+  }else if(cardUID == cardUID8){
+    return cardType4;
+  }else if(cardUID == cardUID9){
+    return cardType5;
+  }else if(cardUID == cardUID10){
+    return cardType5;
+  }else if(cardUID == cardUID11){
+    return cardType6;
+  }else if(cardUID == cardUID12){
+    return cardType6;
+  }else if(cardUID == cardUID13){
+    return cardType7;
+  }else if(cardUID == cardUID14){
+    return cardType7;
+  }else if(cardUID == cardUID15){
+    return cardType8;
+  }else if(cardUID == cardUID16){
+    return cardType8;
+  }
+}
