@@ -57,7 +57,7 @@ void setup() {
   digitalWrite(Z_ENABLE_PIN, LOW);
 
   randomSeed(analogRead(A0));
-  setSpeed(1);
+  setSpeed(2);
   home();
   Serial.println("Home");
   delay(1000);
@@ -98,6 +98,7 @@ void loop() {
     k = !k;
     delay(500);
   }*/
+  setSpeed(2);
   chooseCard();
   delay(500);
   home();
@@ -212,9 +213,9 @@ void home(){
   homingY = true;
   homingZ = true;
 
-  /*attachInterrupt(digitalPinToInterrupt(X_ENDSTOP_PIN), homeXDone, FALLING); //Attach interrupt to endstop pin of X axis
-  attachInterrupt(digitalPinToInterrupt(Y_ENDSTOP_PIN), homeYDone, FALLING);
-  attachInterrupt(digitalPinToInterrupt(Z_ENDSTOP_PIN), homeZDone, FALLING);*/
+  attachInterrupt(digitalPinToInterrupt(X_ENDSTOP_PIN), homeXDone, RISING); //Attach interrupt to endstop pin of X axis
+  attachInterrupt(digitalPinToInterrupt(Y_ENDSTOP_PIN), homeYDone, RISING);
+  attachInterrupt(digitalPinToInterrupt(Z_ENDSTOP_PIN), homeZDone, RISING);
 
   Serial.print(digitalRead(X_ENDSTOP_PIN));
   Serial.print(" ");
@@ -223,7 +224,7 @@ void home(){
   Serial.println(digitalRead(Z_ENDSTOP_PIN));
 
   while(homingX || homingY || homingZ){ //Move axis if not all axis are homed
-
+/*
     if(!digitalRead(X_ENDSTOP_PIN)){
       homingX = false;
     }
@@ -233,7 +234,7 @@ void home(){
     if(!digitalRead(Z_ENDSTOP_PIN)){
       homingZ = false;
     }
-
+*/
     if(homingX){
       dirNeg(X_DIR_PIN);
       digitalWrite(X_STEP_PIN, HIGH);
@@ -259,9 +260,9 @@ void home(){
 
   
 
-  /*detachInterrupt(X_ENDSTOP_PIN);
+  detachInterrupt(X_ENDSTOP_PIN);
   detachInterrupt(Y_ENDSTOP_PIN);
-  detachInterrupt(Z_ENDSTOP_PIN);*/
+  detachInterrupt(Z_ENDSTOP_PIN);
 }
 
 void homeXDone(){
@@ -319,7 +320,7 @@ void chooseCard(){
   move(card1X, card1Y, 0);
   delay(1000);
   move(card2X, card2Y, 0);
-/*
+ /*
   readCard(card1X, card1Y); //Read the selected cards
   readCard(card2X, card2Y);
   */
@@ -542,6 +543,9 @@ void setSpeed(int speed){
     break;
     case 3:
       STEP_TIME_Y = 100;
+    break;
+    case 4:
+      STEP_TIME_Y = 70;
     break;
   }
 }
