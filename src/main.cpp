@@ -23,7 +23,7 @@ void pickupCard(bool pickup);
 bool checkForPairs();
 void showCard(int cardX, int cardY);
 const char* lookUpCardType(const char* cardUID);  //Take the cardUID and output readable card type
-void setSpeed(int speed, char axis); //Calculates step time from desired speed in mm/s
+void setSpeed(int speed); //Calculates step time from desired speed in mm/s
 
 MFRC522 rfid(SS_PIN, RST_PIN);
 
@@ -35,7 +35,7 @@ int pairX2;
 int pairY2;
 
 void setup() {
-  Serial.begin(115200);
+  Serial.begin(9600);
   //SPI.begin();
   //rfid.PCD_Init();
 
@@ -56,9 +56,14 @@ void setup() {
   digitalWrite(Y_ENABLE_PIN, LOW);
   digitalWrite(Z_ENABLE_PIN, LOW);
 
-
-  move(30, 30, currentZ);
-
+  home();
+  Serial.println("Home");
+  delay(1000);
+  move(X_SIZE/2, Y_SIZE/2, 0);
+  Serial.println("Punt 1 bereikt");
+  delay(1000);
+  move(50, 50, 0);
+  Serial.println("Punt 2 bereikt");
 /*
   home();
   delay(2000);
@@ -138,7 +143,7 @@ void move(int x, int y, int z){
     ZMoveFinished = true;
   }
 
-  while(!XMoveFinished && !YMoveFinished && !ZMoveFinished){
+  while(!XMoveFinished || !YMoveFinished || !ZMoveFinished){
 
     if(XShouldMove){  //Move X if X should be moving
       if(stepsMadeX < stepsToX){  //If the amount of steps that have been made are less then the necessary amount of steps, make another steps
@@ -210,25 +215,22 @@ void home(){
     }
 
     if(homingX){
-      Serial.println("Homing X");
       dirNeg(X_DIR_PIN);
       digitalWrite(X_STEP_PIN, HIGH);
     }
     if(homingY){
-      Serial.println("Homing Y");
       dirNeg(Y_DIR_PIN);
       digitalWrite(Y_STEP_PIN, HIGH);
     }
     if(homingZ){
-      Serial.println("Homing Z");
       dirNeg(Z_DIR_PIN);
       digitalWrite(Z_STEP_PIN, HIGH);
     }
-    delayMicroseconds(STEP_TIME);
+    delayMicroseconds(STEP_TIME_Y);
     digitalWrite(X_STEP_PIN, LOW);
     digitalWrite(Y_STEP_PIN, LOW);
     digitalWrite(Z_STEP_PIN, LOW);
-    delayMicroseconds(STEP_TIME);
+    delayMicroseconds(STEP_TIME_Y);
   }
 
   currentX = 0; //Set current position of axis to zero position
@@ -258,11 +260,11 @@ void homeZDone(){
 }
 
 void dirNeg(byte pin){
-  digitalWrite(pin, LOW);
+  digitalWrite(pin, HIGH);
 }
 
 void dirPos(byte pin){
-  digitalWrite(pin, HIGH);
+  digitalWrite(pin, LOW);
 }
 
 void chooseCard(){
@@ -296,9 +298,9 @@ void readCard(int cardX, int cardY){  //fixen dat de z positie word bijgehouden 
 
   while(!rfid.PICC_IsNewCardPresent() && counter < 4000){ //While the card isn't detected and not too much steps are made, move down
     digitalWrite(Z_STEP_PIN, HIGH);
-    delayMicroseconds(STEP_TIME);
+    delayMicroseconds(STEP_TIME_Y);
     digitalWrite(Z_STEP_PIN, LOW);
-    delayMicroseconds(STEP_TIME);
+    delayMicroseconds(STEP_TIME_Y);
     counter++;
   }
   if(counter == 4000){  //Too much steps are made, no card detected
@@ -342,9 +344,9 @@ void getCards(int pairX1, int pairY1, int pairX2, int pairY2){  //fixen dat de z
 
   while(!rfid.PICC_IsNewCardPresent() && counter < 4000){
     digitalWrite(Z_STEP_PIN, HIGH);
-    delayMicroseconds(STEP_TIME);
+    delayMicroseconds(STEP_TIME_Y);
     digitalWrite(Z_STEP_PIN, LOW);
-    delayMicroseconds(STEP_TIME);
+    delayMicroseconds(STEP_TIME_Y);
     counter++;
   }
   if(counter == 4000){
@@ -372,9 +374,9 @@ void getCards(int pairX1, int pairY1, int pairX2, int pairY2){  //fixen dat de z
 
   while(!rfid.PICC_IsNewCardPresent() && counter < 4000){
     digitalWrite(Z_STEP_PIN, HIGH);
-    delayMicroseconds(STEP_TIME);
+    delayMicroseconds(STEP_TIME_Y);
     digitalWrite(Z_STEP_PIN, LOW);
-    delayMicroseconds(STEP_TIME);
+    delayMicroseconds(STEP_TIME_Y);
     counter++;
   }
   if(counter == 4000){
@@ -486,18 +488,16 @@ const char* lookUpCardType(const char* cardUID){
   }
 }
 
-void setSpeed(int speed, char axis){
-  switch(axis){
-    case 'X':
-      int rpm = (60*speed)/(2*PI*RADIUS_PULLEY_X);
-      STEP_TIME_X = 1.8/(60*rpm);
+void setSpeed(int speed){
+  switch(speed){
+    case 1:
+      STEP_TIME_Y = 1000;
     break;
-    case 'Y':
-      int rpm = (60*speed)/(2*PI*RADIUS_PULLEY_Y);
-      STEP_TIME_Y = 1.8/(60*rpm);
+    case 2:
+      STEP_TIME_Y = 200;
     break;
-    case 'Z':
-      STEP_TIME_Z = 1000;
+    case 3:
+      STEP_TIME_Y = 100;
     break;
   }
 }

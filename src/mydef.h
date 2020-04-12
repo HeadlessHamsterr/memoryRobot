@@ -17,12 +17,12 @@
 #define SS_PIN 0
 #define RST_PIN 0
 
-#define STEPS_PER_MM_X 400
-#define STEPS_PER_MM_Y 400
+#define STEPS_PER_MM_X 50
+#define STEPS_PER_MM_Y 37
 #define STEPS_PER_MM_Z 400
 
 #define X_SIZE 200
-#define Y_SIZE 200
+#define Y_SIZE 305
 #define Z_HEIGHT 200
 #define BOARD_SIZE_X 4
 #define BOARD_SIZE_Y 4
@@ -41,8 +41,8 @@
 #define collectX 0
 #define collectY 0
 
-#define RADIUS_PULLEY_X
-#define RADIUS_PULLEY_Y
+#define RADIUS_PULLEY_X 12.6
+#define RADIUS_PULLEY_Y 12.6
 
 int STEP_TIME_X = 1000;
 int STEP_TIME_Y = 1000;
