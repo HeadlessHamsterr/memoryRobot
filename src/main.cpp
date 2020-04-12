@@ -56,14 +56,13 @@ void setup() {
   digitalWrite(Y_ENABLE_PIN, LOW);
   digitalWrite(Z_ENABLE_PIN, LOW);
 
+  randomSeed(analogRead(A0));
+  setSpeed(1);
   home();
   Serial.println("Home");
   delay(1000);
-  move(X_SIZE/2, Y_SIZE/2, 0);
-  Serial.println("Punt 1 bereikt");
-  delay(1000);
-  move(50, 50, 0);
-  Serial.println("Punt 2 bereikt");
+  setSpeed(3);
+  //chooseCard();
 /*
   home();
   delay(2000);
@@ -82,6 +81,27 @@ void loop() {
     chooseCard();
     firstRun = false;
   }*/
+  /*
+  int k = 0;
+  for(int y = 0; y < BOARD_SIZE_Y; y++){
+    if(k == 0){
+      for(int x = 0; x < BOARD_SIZE_X; x++){
+        move(kaartLocatiesX[x], kaartLocatiesY[y], 0);
+        delay(500);
+      }
+    }else if(k == 1){
+      for(int x = BOARD_SIZE_X; x > 0; x--){
+        move(kaartLocatiesX[x], kaartLocatiesY[y], 0);
+        delay(500);
+      }
+    }
+    k = !k;
+    delay(500);
+  }*/
+  chooseCard();
+  delay(500);
+  home();
+  delay(500);
 }
 
 void move(int x, int y, int z){
@@ -277,8 +297,32 @@ void chooseCard(){
       card2X = random(0, 4);
   }
 
+  Serial.print(card1X);
+  Serial.print(" ");
+  Serial.println(card1Y);
+  Serial.print(card2X);
+  Serial.print(" ");
+  Serial.println(card2Y);
+
+  card1X = kaartLocatiesX[card1X];
+  card1Y = kaartLocatiesY[card1Y];
+  card2X = kaartLocatiesX[card2X];
+  card2Y = kaartLocatiesY[card2Y];
+
+  Serial.print(card1X);
+  Serial.print(" ");
+  Serial.println(card1Y);
+  Serial.print(card2X);
+  Serial.print(" ");
+  Serial.println(card2Y);
+
+  move(card1X, card1Y, 0);
+  delay(1000);
+  move(card2X, card2Y, 0);
+/*
   readCard(card1X, card1Y); //Read the selected cards
   readCard(card2X, card2Y);
+  */
 }
 
 void readCard(int cardX, int cardY){  //fixen dat de z positie word bijgehouden tijdens langzaam omlaag bewegen
