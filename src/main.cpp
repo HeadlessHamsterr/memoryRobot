@@ -23,6 +23,7 @@ void pickupCard(bool pickup);
 bool checkForPairs();
 void showCard(int cardX, int cardY);
 const char* lookUpCardType(const char* cardUID);  //Take the cardUID and output readable card type
+void setSpeed(int speed, char axis); //Calculates step time from desired speed in mm/s
 
 MFRC522 rfid(SS_PIN, RST_PIN);
 
@@ -169,11 +170,11 @@ void move(int x, int y, int z){
       }
     }
 
-    delayMicroseconds(STEP_TIME);
+    delayMicroseconds(STEP_TIME_Y);
     digitalWrite(X_STEP_PIN, LOW);
     digitalWrite(Y_STEP_PIN, LOW);
     digitalWrite(Z_STEP_PIN, LOW);
-    delayMicroseconds(STEP_TIME);
+    delayMicroseconds(STEP_TIME_Y);
   }
 
   currentX = x;
@@ -482,5 +483,21 @@ const char* lookUpCardType(const char* cardUID){
     return cardType8;
   }else if(cardUID == cardUID16){
     return cardType8;
+  }
+}
+
+void setSpeed(int speed, char axis){
+  switch(axis){
+    case 'X':
+      int rpm = (60*speed)/(2*PI*RADIUS_PULLEY_X);
+      STEP_TIME_X = 1.8/(60*rpm);
+    break;
+    case 'Y':
+      int rpm = (60*speed)/(2*PI*RADIUS_PULLEY_Y);
+      STEP_TIME_Y = 1.8/(60*rpm);
+    break;
+    case 'Z':
+      STEP_TIME_Z = 1000;
+    break;
   }
 }

@@ -41,7 +41,12 @@
 #define collectX 0
 #define collectY 0
 
-#define STEP_TIME 1000
+#define RADIUS_PULLEY_X
+#define RADIUS_PULLEY_Y
+
+int STEP_TIME_X = 1000;
+int STEP_TIME_Y = 1000;
+int STEP_TIME_Z = 1000;
 
 volatile bool homingX = false;
 volatile bool homingY = false;
