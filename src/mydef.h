@@ -1,21 +1,31 @@
 #define X_ENABLE_PIN 13
-#define X_STEP_PIN 12
-#define X_DIR_PIN 11
+#define X_STEP_PIN 15
+#define X_DIR_PIN 21
 
 #define Y_ENABLE_PIN 10
-#define Y_STEP_PIN 9
-#define Y_DIR_PIN 8
+#define Y_STEP_PIN 22
+#define Y_DIR_PIN 23
 
 #define Z_ENABLE_PIN 7
-#define Z_STEP_PIN 6
-#define Z_DIR_PIN 5
+#define Z_STEP_PIN 3
+#define Z_DIR_PIN 2
 
-#define X_ENDSTOP_PIN 2
-#define Y_ENDSTOP_PIN 3
-#define Z_ENDSTOP_PIN 4
+#define X_ENDSTOP_PIN 18
+#define Y_ENDSTOP_PIN 19
+#define Z_ENDSTOP_PIN 20
 
 #define SS_PIN 0
 #define RST_PIN 0
+#define TEMP_0_PIN 7
+#define TEMP_BED_PIN 6
+#define HEATER_0_PIN 13
+#define HEATER_BED_PIN 12
+#define X_ENABLE_PIN 14
+#define Y_ENABLE_PIN 14
+#define Z_ENABLE_PIN 26
+#define FAN_PIN 4
+#define SDSS 31
+#define LED_PIN 27
 
 #define STEPS_PER_MM_X 50
 #define STEPS_PER_MM_Y 37
