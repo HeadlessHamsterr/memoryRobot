@@ -70,11 +70,13 @@ bool XMoveFinished = false;
 bool YMoveFinished = false;
 bool ZMoveFinished = false;
 
-const char* kaarten[4][4] = {
-    {"empty1", "empty2", "empty3", "empty4"},
-    {"empty5", "empty6", "empty7", "empty8"},
-    {"empty9", "empty10", "empty11", "empty12"},
-    {"empty13", "empty14", "empty15", "empty16"}
+char kaarten[4][4] = {};
+
+bool skip[4][4] = {
+    {false, false, false, false},
+    {false, false, false, false},
+    {false, false, false, false},
+    {false, false, false, false}
 };
 
 int kaartLocatiesX[] = {27, 92, 157, 222};
@@ -97,11 +99,11 @@ const char* cardUID14 = "cardUID14";
 const char* cardUID15 = "cardUID15";
 const char* cardUID16 = "cardUID16";
 
-const char* cardType1 = "cardType1";
-const char* cardType2 = "cardType2";
-const char* cardType3 = "cardType3";
-const char* cardType4 = "cardType4";
-const char* cardType5 = "cardType5";
-const char* cardType6 = "cardType6";
-const char* cardType7 = "cardType7";
-const char* cardType8 = "cardType8";
+char cardType1 = 1;
+char cardType2 = 2;
+char cardType3 = 3;
+char cardType4 = 4;
+char cardType5 = 5;
+char cardType6 = 6;
+char cardType7 = 7;
+char cardType8 = 8;

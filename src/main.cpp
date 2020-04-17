@@ -22,8 +22,9 @@ void getCard(int pairX1, int pairY1, int pairX2, int pairY2); //Read the selecte
 void pickupCard(bool pickup);
 bool checkForPairs();
 void showCard(int cardX, int cardY);
-const char* lookUpCardType(const char* cardUID);  //Take the cardUID and output readable card type
+char lookUpCardType(const char* cardUID);  //Take the cardUID and output readable card type
 void setSpeed(int speed); //Calculates step time from desired speed in mm/s
+void establishContact();
 
 MFRC522 rfid(SS_PIN, RST_PIN);
 
@@ -56,17 +57,14 @@ void setup() {
   digitalWrite(Y_ENABLE_PIN, LOW);
   digitalWrite(Z_ENABLE_PIN, LOW);
 
+  establishContact();
+
   randomSeed(analogRead(A0));
   setSpeed(2);
   home();
   Serial.println("Home");
   delay(1000);
   setSpeed(3);
-  //chooseCard();
-/*
-  home();
-  delay(2000);
-  move(X_SIZE/2, Y_SIZE/2, Z_HEIGHT); //Move to the center*/
 }
  
 void loop() {
@@ -224,7 +222,7 @@ void home(){
   Serial.println(digitalRead(Z_ENDSTOP_PIN));
 
   while(homingX || homingY || homingZ){ //Move axis if not all axis are homed
-/*
+  /*
     if(!digitalRead(X_ENDSTOP_PIN)){
       homingX = false;
     }
@@ -234,7 +232,7 @@ void home(){
     if(!digitalRead(Z_ENDSTOP_PIN)){
       homingZ = false;
     }
-*/
+  */
     if(homingX){
       dirNeg(X_DIR_PIN);
       digitalWrite(X_STEP_PIN, HIGH);
@@ -329,7 +327,6 @@ void chooseCard(){
 void readCard(int cardX, int cardY){  //fixen dat de z positie word bijgehouden tijdens langzaam omlaag bewegen
   int counter = 0;
   const char* kaartUID;
-  const char* kaart;
   String kaartString;
 
   int x = kaartLocatiesX[cardX];
@@ -356,8 +353,7 @@ void readCard(int cardX, int cardY){  //fixen dat de z positie word bijgehouden 
       kaartString[i] = rfid.uid.uidByte[i]; //Store UID
     }
     kaartUID = kaartString.c_str(); //Convert UID to const char
-    //KaartUID omzetten naar kaartType en opslaan in kaart
-    kaarten[cardX][cardY] = kaart;  //Store readable card type in array
+    kaarten[cardX][cardY] = lookUpCardType(kaartUID);  //Store readable card type in array
     showCard(cardX, cardY); //Show the card to the user
   }
 
@@ -368,12 +364,21 @@ void readCard(int cardX, int cardY){  //fixen dat de z positie word bijgehouden 
   move(x, y, Z_POS_CARD+10);
 }
 
+void showCard(int cardX, int cardY){
+  char card = kaarten[cardX][cardY];
+  if(Serial.available() > 0){
+    Serial.write(card);
+    Serial.write(cardX);
+    Serial.write(cardY);
+  }
+}
+
 void getCards(int pairX1, int pairY1, int pairX2, int pairY2){  //fixen dat de z positie word bijgehouden tijdens langzaam omlaag bewegen
   int counter = 0;
   const char* kaart1;
   const char* kaart2;
-  const char* kaartType1;
-  const char* kaartType2;
+  char kaartType1;
+  char kaartType2;
   String kaartString;
 
   int x1 = kaartLocatiesX[pairX1];  //Look up coordinates for selected cards
@@ -456,8 +461,8 @@ void getCards(int pairX1, int pairY1, int pairX2, int pairY2){  //fixen dat de z
     move(x2, y2, Z_POS_CARD+10);
     move(collectX, collectY, Z_POS_CARD+10);
     pickupCard(false);
-    kaarten[pairX1][pairY1] = "skip";
-    kaarten[pairX2][pairY2] = "skip";
+    skip[pairX1][pairY1] = true;
+    skip[pairX2][pairY2] = true;
   }else{
     kaarten[pairX1][pairY1] = kaartType1;
     kaarten[pairX2][pairY2] = kaartType2;
@@ -477,7 +482,7 @@ bool checkForPairs(){
       for(int y = 0; y < BOARD_SIZE_Y && !pairFound; y++){
         for(int x = counterX+1; x < BOARD_SIZE_X && !pairFound; x++){
           if(kaarten[counterX][counterY] == kaarten[x][y] && counterX != x || counterY != y){ //Selected cards are the same
-            if(kaarten[counterX][counterY] != "skip" && kaarten[x][y] != "skip"){
+            if(!skip[counterX][counterY] && !skip[x][y]){
               pairFound = true;
               pairX1 = counterX;  //Save the coordinates of the pairs
               pairY1 = counterY;
@@ -497,7 +502,7 @@ bool checkForPairs(){
   }
 }
 
-const char* lookUpCardType(const char* cardUID){
+char lookUpCardType(const char* cardUID){
   if(cardUID == cardUID1){
     return cardType1;
   }else if(cardUID == cardUID2){
@@ -547,5 +552,12 @@ void setSpeed(int speed){
     case 4:
       STEP_TIME_Y = 70;
     break;
+  }
+}
+
+void establishContact(){
+  while(Serial.available() <= 0){
+    Serial.print('A');
+    delay(300);
   }
 }
