@@ -22,6 +22,7 @@ void getCard(int pairX1, int pairY1, int pairX2, int pairY2); //Read the selecte
 void pickupCard(bool pickup);
 bool checkForPairs();
 void showCard(int cardX, int cardY);
+void hideCard(int cardX, int cardY);
 char lookUpCardType(const char* cardUID);  //Take the cardUID and output readable card type
 void setSpeed(int speed); //Calculates step time from desired speed in mm/s
 void establishContact();
@@ -362,12 +363,22 @@ void readCard(int cardX, int cardY){  //fixen dat de z positie word bijgehouden 
   move(x, y, Z_POS_CARD);
   pickupCard(false);
   move(x, y, Z_POS_CARD+10);
+  delay(1000);
 }
 
 void showCard(int cardX, int cardY){
   char card = kaarten[cardX][cardY];
   if(Serial.available() > 0){
     Serial.write(card);
+    Serial.write(cardX);
+    Serial.write(cardY);
+  }
+}
+
+void hideCard(int cardX, int cardY){
+  char card = kaarten[cardX][cardY];
+  if(Serial.available() > 0){
+    Serial.write(0);
     Serial.write(cardX);
     Serial.write(cardY);
   }
