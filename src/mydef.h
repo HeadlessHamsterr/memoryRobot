@@ -27,8 +27,8 @@
 #define SDSS 31
 #define LED_PIN 27
 
-#define STEPS_PER_MM_X 50
-#define STEPS_PER_MM_Y 37
+#define STEPS_PER_MM_X 72
+#define STEPS_PER_MM_Y 100
 #define STEPS_PER_MM_Z 400
 
 #define X_SIZE 200

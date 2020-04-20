@@ -58,7 +58,7 @@ void setup() {
   digitalWrite(Y_ENABLE_PIN, LOW);
   digitalWrite(Z_ENABLE_PIN, LOW);
 
-  establishContact();
+  //establishContact();
 
   randomSeed(analogRead(A0));
   setSpeed(2);
@@ -97,11 +97,11 @@ void loop() {
     k = !k;
     delay(500);
   }*/
-  setSpeed(2);
+  //setSpeed(2);
   chooseCard();
   delay(500);
-  home();
-  delay(500);
+  //home();
+  //delay(500);
 }
 
 void move(int x, int y, int z){
@@ -210,30 +210,30 @@ void move(int x, int y, int z){
 void home(){
   homingX = true; //Set a flag to indicate axis is homing
   homingY = true;
-  homingZ = true;
+  //homingZ = true;
 
-  attachInterrupt(digitalPinToInterrupt(X_ENDSTOP_PIN), homeXDone, RISING); //Attach interrupt to endstop pin of X axis
-  attachInterrupt(digitalPinToInterrupt(Y_ENDSTOP_PIN), homeYDone, RISING);
-  attachInterrupt(digitalPinToInterrupt(Z_ENDSTOP_PIN), homeZDone, RISING);
+  //attachInterrupt(digitalPinToInterrupt(X_ENDSTOP_PIN), homeXDone, RISING); //Attach interrupt to endstop pin of X axis
+  //attachInterrupt(digitalPinToInterrupt(Y_ENDSTOP_PIN), homeYDone, RISING);
+  //attachInterrupt(digitalPinToInterrupt(Z_ENDSTOP_PIN), homeZDone, RISING);
 
-  Serial.print(digitalRead(X_ENDSTOP_PIN));
+  /*Serial.print(digitalRead(X_ENDSTOP_PIN));
   Serial.print(" ");
   Serial.print(digitalRead(Y_ENDSTOP_PIN));
   Serial.print(" ");
-  Serial.println(digitalRead(Z_ENDSTOP_PIN));
+  Serial.println(digitalRead(Z_ENDSTOP_PIN));*/
 
   while(homingX || homingY || homingZ){ //Move axis if not all axis are homed
-  /*
-    if(!digitalRead(X_ENDSTOP_PIN)){
+  
+    if(digitalRead(X_ENDSTOP_PIN)){
       homingX = false;
     }
-    if(!digitalRead(Y_ENDSTOP_PIN)){
+    if(digitalRead(Y_ENDSTOP_PIN)){
       homingY = false;
     }
-    if(!digitalRead(Z_ENDSTOP_PIN)){
+    if(digitalRead(Z_ENDSTOP_PIN)){
       homingZ = false;
     }
-  */
+  
     if(homingX){
       dirNeg(X_DIR_PIN);
       digitalWrite(X_STEP_PIN, HIGH);
